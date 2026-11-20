@@ -14,6 +14,9 @@ Judgement calls made while building, in the order they came up.
 - **pHash duplicate threshold is 6 bits** (out of 64). Measured on the seed set: re-encoded or resized copies are ≤ 4 bits apart, and the closest pair of different pieces is 8.
 - Events and trips are hard-deleted, with an 8-second Undo. Pieces and looks are soft-deleted to Trash and purged after 30 days, when the profile next loads.
 
+## Supabase grants (found in live verification)
+- This project does **not** grant table privileges to `anon` by default. Every API call failed with `42501 permission denied` even though RLS policies existed. Migration `20261120000002_grants.sql` grants `select, insert, update, delete` on the 7 app tables to `anon, authenticated`, and nothing else. The local e2e suite could not catch this because it runs on the in-browser demo adapter. `scripts/live-verify.mjs` now covers it.
+
 ## Supabase advisors
 - **Security:** no findings after the migration.
 - **Performance:** only "unused index" (INFO) on the `profile_id` and foreign-key indexes. This is expected on a new database and kept on purpose, because every query filters by `profile_id` and the foreign keys need covering indexes.
@@ -40,4 +43,7 @@ Judgement calls made while building, in the order they came up.
 
 ## Deployment
 - **Repository:** the session's GitHub access covers only `Lakshytta/wardrobe` (already created and empty), so that repository is used instead of creating `wardrobe-app`. Pushing to `main` was refused by the session's permission rules, so the code is on `claude/awesome-volta-da8kdz`. That is the repository's only branch, so it is the default branch and Vercel's production branch.
+- **Vercel:** project `wardrobe` (team lakki5) is Git-connected; every push to `claude/awesome-volta-da8kdz` deploys to production. Production URL: https://wardrobe-ten-sooty.vercel.app.
+- **Live checks:** run `node scripts/live-verify.mjs <url>`. It checks home, profile switching, opening a piece, uploading a photo to Storage, the photo appearing on a second "device" through Realtime, a style check, saving a look, creating an event and exporting a backup. It then deletes everything it created through the app's own delete paths; the temporary profiles are deleted with SQL because the app has no profile-delete button.
+- **Cloud environment:** a personal Claude Code environment named `wardrobe` allows the live site and Supabase hosts and runs `npm ci` on start, so future sessions can run the live checks.
 - **CSP** in `vercel.json` allows only self, plus the Supabase project for images, REST and Realtime websockets. There are no third-party scripts.
