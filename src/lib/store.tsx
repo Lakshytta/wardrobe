@@ -146,7 +146,7 @@ function useStoreValue() {
     toast(`Look “${l.name}” moved to Trash`, () => void put('looks', l));
   }, [put, toast]);
   const restoreLook = useCallback(async (l: Look) => { await put('looks', { ...l, deleted_at: null }); toast(`Look “${l.name}” restored`); }, [put, toast]);
-  const purgeLook = useCallback(async (l: Look) => del('looks', l.id), [del]);
+  const purgeLook = useCallback(async (l: Look) => { await del('looks', l.id); void adapter.removeImages(l.profile_id, l.id); }, [del]);
 
   // ---------- events / wears / trips (hard delete with undo) ----------
   const saveEvent = useCallback((e: WEvent) => put('events', e), [put]);
