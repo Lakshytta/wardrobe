@@ -9,7 +9,7 @@ export function TripForm({ initial, onDone }: { initial?: Trip; onDone: (t: Trip
   const [name, setName] = useState(initial?.name ?? '');
   const [start, setStart] = useState(initial?.start_date ?? today());
   const [end, setEnd] = useState(initial?.end_date ?? today());
-  const inRange = s.data.events.filter((e) => e.date >= start && e.date <= (end < start ? start : end)).sort((a, b) => a.date.localeCompare(b.date));
+  const inRange = s.data.events.filter((e) => !!e.date && e.date >= start && e.date <= (end < start ? start : end)).sort((a, b) => a.date!.localeCompare(b.date!));
   const [picked, setPicked] = useState<string[] | null>(initial?.event_ids ?? null);
   const chosen = picked ?? inRange.map((e) => e.id);
   return (

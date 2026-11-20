@@ -9,7 +9,7 @@ type DB = Record<TableName, Record<string, any>>;
 const KEY = 'memory-db-v1';
 
 function seedDb(): DB {
-  const db: DB = { profiles: {}, categories: {}, items: {}, looks: {}, events: {}, wears: {}, trips: {} };
+  const db: DB = { profiles: {}, categories: {}, items: {}, looks: {}, events: {}, wears: {}, trips: {}, celebrations: {} };
   db.profiles[SEED_PROFILE.id] = SEED_PROFILE;
   for (const c of DEFAULT_CATEGORIES) db.categories[c.id] = c;
   for (const i of SEED_ITEMS) db.items[i.id] = i;
@@ -40,6 +40,7 @@ export class MemoryAdapter implements DataAdapter {
     if (this.db) return this.db;
     const saved = await idbGet<DB>(KEY);
     this.db = saved ?? seedDb();
+    this.db.celebrations ??= {}; // databases saved before celebrations existed
     if (!saved) await idbSet(KEY, this.db);
     return this.db;
   }
@@ -64,7 +65,7 @@ export class MemoryAdapter implements DataAdapter {
   async loadProfile(pid: string): Promise<ProfileData> {
     const db = await this.load();
     const of = (t: TableName) => Object.values(db[t]).filter((r: any) => r.profile_id === pid).map((r) => structuredClone(r));
-    return { items: of('items'), looks: of('looks'), events: of('events'), wears: of('wears'), trips: of('trips') };
+    return { items: of('items'), looks: of('looks'), events: of('events'), wears: of('wears'), trips: of('trips'), celebrations: of('celebrations') };
   }
   async upsert<T extends { id: string }>(table: TableName, row: T) {
     const db = await this.load();

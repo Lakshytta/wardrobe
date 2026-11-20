@@ -78,16 +78,38 @@ export interface Look {
   deleted_at: string | null;
 }
 
+export interface OutfitOption {
+  id: string;
+  item_ids: string[]; // the outfit: main + blouse/top + dupatta
+  bag_id: string | null;
+  jewellery_ids: string[];
+  bag_note: string; // for a bag not photographed yet
+  jewellery_note: string;
+  note: string;
+  chosen: boolean; // the final pick for this sub-event
+}
+
+export interface Celebration {
+  id: string;
+  profile_id: string;
+  name: string;
+  notes: string;
+  created_at: string;
+}
+
 export interface WEvent {
   id: string;
   profile_id: string;
   title: string;
-  date: string; // yyyy-mm-dd
+  date: string | null; // yyyy-mm-dd; sub-events of a celebration may not have a date yet
   occasion: string;
   people: string[];
   look_id: string | null;
   notes: string;
   worn: boolean;
+  celebration_id?: string | null;
+  sort?: number;
+  options?: OutfitOption[];
 }
 
 export interface Wear {
@@ -125,9 +147,10 @@ export interface ProfileData {
   events: WEvent[];
   wears: Wear[];
   trips: Trip[];
+  celebrations: Celebration[];
 }
 
-export type TableName = 'profiles' | 'categories' | 'items' | 'looks' | 'events' | 'wears' | 'trips';
+export type TableName = 'profiles' | 'categories' | 'items' | 'looks' | 'events' | 'wears' | 'trips' | 'celebrations';
 
 export const DEFAULT_OCCASIONS = [
   'Daily', 'Work', 'Casual', 'Puja', 'Festive', 'Mehendi', 'Haldi', 'Sangeet',

@@ -1,18 +1,18 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import type { Category, Item, Look, Profile, ProfileData, TableName, Trip, WEvent, Wear } from './types.ts';
+import type { Celebration, Category, Item, Look, Profile, ProfileData, TableName, Trip, WEvent, Wear } from './types.ts';
 import { adapter } from './data/index.ts';
 import { uuid } from './data/adapter.ts';
 import { SupabaseAdapter } from './data/supabase.ts';
 
 export interface Toast { id: number; text: string; undo?: () => void; tone?: 'info' | 'error' }
 
-const EMPTY: ProfileData = { items: [], looks: [], events: [], wears: [], trips: [] };
+const EMPTY: ProfileData = { items: [], looks: [], events: [], wears: [], trips: [], celebrations: [] };
 const TRASH_DAYS = 30;
 const UNDO_MS = 8000;
 const LS_PROFILE = 'wardrobe-profile';
 
 type Key = keyof ProfileData;
-const TABLE_KEY: Partial<Record<TableName, Key>> = { items: 'items', looks: 'looks', events: 'events', wears: 'wears', trips: 'trips' };
+const TABLE_KEY: Partial<Record<TableName, Key>> = { items: 'items', looks: 'looks', events: 'events', wears: 'wears', trips: 'trips', celebrations: 'celebrations' };
 
 function lsGet(k: string) { try { return localStorage.getItem(k); } catch { return null; } }
 function lsSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch { /* private mode */ } }
@@ -165,6 +165,15 @@ function useStoreValue() {
     toast(`Trip “${t.name}” deleted`, () => void put('trips', t));
   }, [del, put, toast]);
 
+  // ---------- celebrations (e.g. a wedding with many sub-events) ----------
+  const saveCelebration = useCallback((c: Celebration) => put('celebrations', c), [put]);
+  /** Deletes the celebration and all its sub-events, with Undo that restores both. */
+  const deleteCelebration = useCallback(async (c: Celebration, subEvents: WEvent[]) => {
+    for (const e of subEvents) await del('events', e.id);
+    await del('celebrations', c.id);
+    toast(`“${c.name}” deleted`, () => { void (async () => { await put('celebrations', c); for (const e of subEvents) await put('events', e); })(); });
+  }, [del, put, toast]);
+
   // ---------- categories ----------
   const saveCategory = useCallback(async (c: Category) => {
     setCategories((cs) => upsertBy(cs, c).sort((a, b) => a.sort - b.sort));
@@ -184,6 +193,7 @@ function useStoreValue() {
     saveItem, trashItem, restoreItem, purgeItem,
     saveLook, trashLook, restoreLook, purgeLook,
     saveEvent, deleteEvent, saveWear, deleteWear, saveTrip, deleteTrip,
+    saveCelebration, deleteCelebration,
     saveCategory, deleteCategory, put, del, adapter,
   };
 }

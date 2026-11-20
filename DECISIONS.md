@@ -34,6 +34,15 @@ Judgement calls made while building, in the order they came up.
 - **UI writes are optimistic.** The screen updates at once and the write goes to Supabase in the background. If the network is down, the write is queued in IndexedDB and replayed in order when the device is back online. A small "N to sync" tag shows in the header.
 - **The offline app shell:** the service worker precaches every built asset (the list is injected at build time) plus the 200 most recently viewed photos. Data reads fall back to the last cached snapshot in IndexedDB.
 
+## Celebrations (the "Lakshu wedding" section)
+- A generic **celebration** table (name, notes) groups sub-events, so the section can be deleted after the wedding and reused for the next family event. Sub-events are ordinary `events` with `celebration_id`, `sort` and `options`, so they also appear in Plan once dated, and wear history and repeat checks keep working.
+- **Dates are optional** for sub-events (`events.date` is now nullable), because filler suits and undecided functions have no date yet. Undated events are left out of the calendar and the upcoming list, and are sorted last.
+- **Outfit options** are stored as JSON on the event: `[{item_ids, bag_id, jewellery_ids, bag_note, jewellery_note, note, chosen}]`. One option per event can be the ⭐ final choice. Bag and jewellery can be picked from photographed pieces or typed in as notes, because few accessories are photographed yet.
+- **Per family member:** a celebration belongs to one profile's wardrobe, like everything else. Another family member makes their own section from Home.
+- Deleting a celebration deletes its sub-events, with one Undo that restores both. Clothes are never touched.
+- The packing list for a celebration is built from the final choices, not from the rule engine, because the outfits are already decided.
+- Dates are shown in Indian format (`en-IN`, e.g. "10 Feb 2099") everywhere.
+
 ## Engineering
 - Vite 8 and Vitest 5 are used, the current releases, because `@vitejs/plugin-react` 6 requires Vite 8. React stays on 18.3 as specified.
 - Fonts are self-hosted through `@fontsource` (latin subsets of Cormorant Garamond 600/700 and Hanken Grotesk 400/500/600), bundled by Vite.

@@ -1,9 +1,10 @@
-import type { Category, Item, Look, Profile, Trip, WEvent, Wear } from './types.ts';
+import type { Celebration, Category, Item, Look, Profile, Trip, WEvent, Wear } from './types.ts';
 
 export interface Backup {
   app: 'wardrobe'; version: 1; exported_at: string;
   profile: Profile; categories: Category[];
   items: Item[]; looks: Look[]; events: WEvent[]; wears: Wear[]; trips: Trip[];
+  celebrations?: Celebration[]; // added later; older backups do not have it
 }
 
 export function makeBackup(b: Omit<Backup, 'app' | 'version' | 'exported_at'>): Backup {
@@ -23,5 +24,5 @@ export function parseBackup(text: string): Backup | string {
 /** Re-homes every row onto the target profile. */
 export function rehome(b: Backup, profileId: string): Backup {
   const re = <T extends { profile_id: string }>(rows: T[]) => rows.map((r) => ({ ...r, profile_id: profileId }));
-  return { ...b, items: re(b.items), looks: re(b.looks), events: re(b.events), wears: re(b.wears), trips: re(b.trips) };
+  return { ...b, items: re(b.items), looks: re(b.looks), events: re(b.events), wears: re(b.wears), trips: re(b.trips), celebrations: re(b.celebrations ?? []) };
 }

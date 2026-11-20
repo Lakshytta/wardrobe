@@ -24,13 +24,14 @@ const Categories = lazy(() => import('./screens/Categories.tsx'));
 const Trash = lazy(() => import('./screens/Trash.tsx'));
 const Backup = lazy(() => import('./screens/Backup.tsx'));
 const PrintCatalogue = lazy(() => import('./screens/PrintCatalogue.tsx'));
+const CelebrationDetail = lazy(() => import('./screens/CelebrationDetail.tsx'));
 
 const NAV = [
   { href: '#/', label: 'Home', icon: 'home', match: (p: string) => p === '/', id: 'nav-home' },
   { href: '#/closet', label: 'Closet', icon: 'closet', match: (p: string) => p.startsWith('/closet') || p.startsWith('/piece'), id: 'nav-closet' },
   { href: '#/add', label: 'Add', icon: 'plus', match: (p: string) => p.startsWith('/add') || p.startsWith('/review'), id: 'nav-add' },
   { href: '#/studio', label: 'Match', icon: 'match', match: (p: string) => p.startsWith('/studio') || p.startsWith('/look'), id: 'nav-studio' },
-  { href: '#/plan', label: 'Plan', icon: 'calendar', match: (p: string) => p.startsWith('/plan') || p.startsWith('/event') || p.startsWith('/trip'), id: 'nav-plan' },
+  { href: '#/plan', label: 'Plan', icon: 'calendar', match: (p: string) => p.startsWith('/plan') || p.startsWith('/event') || p.startsWith('/trip') || p.startsWith('/celebration'), id: 'nav-plan' },
 ];
 
 function Screen() {
@@ -48,6 +49,7 @@ function Screen() {
     case 'look': return <LookDetail id={b} />;
     case 'plan': return <Plan />;
     case 'event': return <EventDetail id={b} />;
+    case 'celebration': return <CelebrationDetail id={b} />;
     case 'trips': return <Trips />;
     case 'trip': return <TripDetail id={b} />;
     case 'care': return <Care />;

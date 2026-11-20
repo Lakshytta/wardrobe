@@ -24,7 +24,7 @@ export function packTrip(trip: Pick<Trip, 'start_date' | 'end_date' | 'name'>, e
   const tops = pool.filter((i) => slotOf(i, cats) === 'top');
   // the "slots" to dress: each event, or one casual day per trip day when no events
   const slots: { event_id: string | null; label: string; occasion: string }[] = events.length
-    ? [...events].sort((a, b) => a.date.localeCompare(b.date)).map((e) => ({ event_id: e.id, label: `${e.title} · ${e.date}`, occasion: e.occasion || 'Festive' }))
+    ? [...events].sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999')).map((e) => ({ event_id: e.id, label: `${e.title} · ${e.date ?? 'date to be decided'}`, occasion: e.occasion || 'Festive' }))
     : dayList(trip.start_date, trip.end_date).map((d) => ({ event_id: null, label: d, occasion: 'Travel' }));
 
   // enumerate candidate outfits

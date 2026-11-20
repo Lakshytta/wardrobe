@@ -13,6 +13,7 @@ import { occasionMatches } from '../lib/smarts/parseQuery.ts';
 import { slotOf } from '../lib/smarts/wardrobe.ts';
 import { prettyColour } from '../lib/smarts/colors.ts';
 import { canvasToPng, drawBoard, sharePng, downloadBlob } from '../lib/board.ts';
+import { optionFromItems } from '../components/OutfitOptions.tsx';
 import { Icon, ItemTile, Sheet, Swatch, TextField, SelectField, Thumb, slug } from '../components/ui.tsx';
 
 const SLOTS: { id: Slot; label: string; hint: string }[] = [
@@ -69,10 +70,10 @@ export default function Studio() {
 
   const colours = chosen.filter((i) => slotOf(i, categories) !== 'accessory').map((i) => i.primary_color);
   const check = colourCheck([...new Set(colours)]);
-  const warnings = event ? repeatGuard(ids, event.date, event.people, s.data.wears, s.data.events, wardrobe, { ignoreEventId: event.id }) : [];
+  const warnings = event ? repeatGuard(ids, event.date ?? new Date().toISOString().slice(0, 10), event.people, s.data.wears, s.data.events, wardrobe, { ignoreEventId: event.id }) : [];
   const away = chosen.filter((i) => i.care_status !== 'in_wardrobe');
 
-  const runCheck = async () => setVerdict(await smarts().styleCheck(ids, occasion, wardrobe, { month: event ? Number(event.date.slice(5, 7)) : new Date().getMonth() + 1 }));
+  const runCheck = async () => setVerdict(await smarts().styleCheck(ids, occasion, wardrobe, { month: event?.date ? Number(event.date.slice(5, 7)) : new Date().getMonth() + 1 }));
   const makeBoard = async () => {
     const c = await drawBoard(chosen, { title: look?.name || `${occasion} look`, occasion, score: verdict?.score ?? null, verdict: verdict?.verdict });
     const blob = await canvasToPng(c);
@@ -86,7 +87,7 @@ export default function Studio() {
         <h1>{look ? `Edit “${look.name}”` : 'Mix & Match'}</h1>
         <a className="btn small" href="#/looks" data-testid="studio-looks"><Icon name="look" /> My looks</a>
       </div>
-      {event && <p className="okbox">Planning for <strong>{event.title}</strong> on {event.date}. <a href={`#/event/${event.id}`} data-testid="studio-event-back">Back to event</a></p>}
+      {event && <p className="okbox">Planning for <strong>{event.title}</strong>{event.date ? ` on ${event.date}` : ''}. <a href={`#/event/${event.id}`} data-testid="studio-event-back">Back to event</a></p>}
 
       <div className="row" style={{ marginBottom: 12 }}>
         <div style={{ minWidth: 200, flex: 1 }}>
@@ -147,7 +148,14 @@ export default function Studio() {
       <div className="row" style={{ margin: '12px 0' }}>
         <button className="btn primary" data-testid="studio-stylecheck" disabled={!ids.length} onClick={runCheck}><Icon name="sparkle" /> Style check</button>
         <button className="btn" data-testid="studio-board" disabled={!ids.length} onClick={makeBoard}><Icon name="image" /> Make board</button>
-        <button className="btn" data-testid="studio-save" disabled={!ids.length} onClick={() => setSaving(true)}><Icon name="check" /> Save look</button>
+        {event?.celebration_id ? (
+          <button className="btn primary" data-testid="studio-add-option" disabled={!ids.length} onClick={async () => {
+            const opt = optionFromItems(ids, byId);
+            await s.saveEvent({ ...event, options: [...(event.options ?? []), opt] });
+            s.toast(`Added as an outfit option for ${event.title}`);
+            navigate(`/event/${event.id}`, { replace: true });
+          }}><Icon name="check" /> Add as option for {event.title}</button>
+        ) : <button className="btn" data-testid="studio-save" disabled={!ids.length} onClick={() => setSaving(true)}><Icon name="check" /> Save look</button>}
       </div>
 
       {verdict && <VerdictCard v={verdict} byId={byId} onApply={(sw) => { recheck.current = true; setIds((cur) => applySwap(cur, sw)); }} />}

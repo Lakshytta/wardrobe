@@ -23,6 +23,7 @@ export default function Backup() {
     for (const c of b.categories) if (!s.categories.some((x) => x.id === c.id)) await s.saveCategory(c);
     for (const i of b.items) await s.put('items', i);
     for (const l of b.looks) await s.put('looks', l);
+    for (const c of b.celebrations ?? []) await s.put('celebrations', c);
     for (const e of b.events) await s.put('events', e);
     for (const w of b.wears) await s.put('wears', w);
     for (const t of b.trips) await s.put('trips', t);

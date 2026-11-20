@@ -13,7 +13,7 @@ export default function Plan() {
   const [month, setMonth] = useState(() => { const d = new Date(); d.setDate(1); return d; });
   const [sel, setSel] = useState<string | null>(null);
   const creating = query.get('new') === '1';
-  const events = [...s.data.events].sort((a, b) => a.date.localeCompare(b.date));
+  const events = s.data.events.filter((e) => !!e.date).map((e) => ({ ...e, date: e.date! })).sort((a, b) => a.date.localeCompare(b.date));
   const t = today();
   const upcoming = events.filter((e) => e.date >= t);
   const past = events.filter((e) => e.date < t).reverse();

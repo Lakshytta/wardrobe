@@ -20,3 +20,24 @@ test('axe: open dialog', async ({ app: page }) => {
   const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([]);
 });
+
+test('axe: wedding section, sub-event with options, option editor', async ({ app: page }) => {
+  const scan = async () => {
+    const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+    expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`)).toEqual([]);
+  };
+  await page.getByTestId('home-new-celebration').click();
+  await page.getByTestId('celebration-name').fill('Lakshu wedding');
+  await page.getByTestId('celebration-save').click();
+  await page.getByTestId('quick-haldi').click();
+  await page.getByTestId('quick-shaadi').click();
+  await scan();
+  await page.getByTestId('sub-haldi').click();
+  await page.getByTestId('option-add').click();
+  await page.getByTestId(`option-pick-${SEED.greenSaree}`).click();
+  await scan();
+  await page.getByTestId('option-save').click();
+  await scan();
+  await page.goto('/#/');
+  await scan();
+});

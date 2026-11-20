@@ -12,7 +12,7 @@ type QueueOp =
 
 const QKEY = 'sb-queue-v1';
 const BUCKET = 'wardrobe';
-const TABLES: TableName[] = ['profiles', 'categories', 'items', 'looks', 'events', 'wears', 'trips'];
+const TABLES: TableName[] = ['profiles', 'categories', 'items', 'looks', 'events', 'wears', 'trips', 'celebrations'];
 
 /** Paths uploaded this session but maybe not yet on the server (shown from memory). */
 export const localBlobs = new Map<string, string>();
@@ -117,8 +117,8 @@ export class SupabaseAdapter implements DataAdapter {
   async loadProfile(pid: string): Promise<ProfileData> {
     await this.ready;
     const data = await this.cached(`sb-profile-${pid}`, async () => {
-      const [items, looks, events, wears, trips] = await Promise.all((['items', 'looks', 'events', 'wears', 'trips'] as TableName[]).map((t) => this.select(t, pid)));
-      return { items, looks, events, wears, trips } as ProfileData;
+      const [items, looks, events, wears, trips, celebrations] = await Promise.all((['items', 'looks', 'events', 'wears', 'trips', 'celebrations'] as TableName[]).map((t) => this.select(t, pid)));
+      return { items, looks, events, wears, trips, celebrations } as ProfileData;
     });
     return {
       items: this.overlay('items', data.items).filter((r) => r.profile_id === pid),
@@ -126,6 +126,7 @@ export class SupabaseAdapter implements DataAdapter {
       events: this.overlay('events', data.events).filter((r) => r.profile_id === pid),
       wears: this.overlay('wears', data.wears).filter((r) => r.profile_id === pid),
       trips: this.overlay('trips', data.trips).filter((r) => r.profile_id === pid),
+      celebrations: this.overlay('celebrations', data.celebrations ?? []).filter((r) => r.profile_id === pid),
     };
   }
   async upsert<T extends { id: string }>(table: TableName, row: T) { await this.exec({ op: 'upsert', table, row }); }

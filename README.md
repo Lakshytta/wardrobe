@@ -23,6 +23,15 @@ New pieces appear straight away on every phone that has the app open.
 Tap the name at the top (for example "My Wardrobe") and then **Add a family member**. Pick a name, a colour and a picture.
 Tap any name in that list to switch wardrobes, or the pencil to rename or recolour it.
 
+### Weddings and big family events (e.g. "Lakshu wedding")
+The card at the top of **Home** opens the wedding page:
+- **Add events** with one tap (Gaur, Haldi, Mehendi, Welcome lunch, Sangeet, After party, Shaadi, Filler suit…) or **Something else…** for any other function. Dates are optional; add them when they are fixed. Use ▲▼ to change the order.
+- Open an event and tap **Add outfit option**. Pick the outfit pieces, then the **Bag** and **Jewellery** tabs. Pick photographed ones or type them in, for example "Gold potli". You can also **Build in Mix & Match** and tap **Add as option**.
+- Add as many options as you like, then tap **⭐ Make final choice** on one. The page warns you if the same saree or suit is already your pick for another function.
+- **Packing list from final choices** makes a tickable list of every outfit, bag and piece of jewellery you chose.
+- After the wedding, tap **Delete this section** to remove the card and its events. Your clothes stay in your wardrobe. Undo is available for a few seconds.
+- To plan another one, use **Plan a wedding or big family event** on Home.
+
 ### Back up and restore
 **☰ More → Backup & restore → Download backup** saves one JSON file with that person's pieces, looks, events, wears and trips.
 Photos stay online; the backup keeps their links.

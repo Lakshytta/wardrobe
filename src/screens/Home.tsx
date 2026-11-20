@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { navigate } from '../lib/router.ts';
 import { useStore, useWardrobe, today } from '../lib/store.tsx';
 import { CARE_LABEL } from '../lib/types.ts';
 import { imgUrl } from '../lib/data/index.ts';
-import { Icon, ItemTile, Thumb, fmtDate, daysFrom } from '../components/ui.tsx';
+import { Icon, ItemTile, Sheet, Thumb, fmtDate, daysFrom } from '../components/ui.tsx';
+import { CelebrationForm, sortSubEvents } from './CelebrationDetail.tsx';
 
 export function Home() {
   const s = useStore();
@@ -11,12 +13,14 @@ export function Home() {
   const attention = useMemo(() => items
     .filter((i) => i.care_status !== 'in_wardrobe')
     .sort((a, b) => (a.care_due ?? '9999').localeCompare(b.care_due ?? '9999')), [items]);
-  const upcoming = s.data.events.filter((e) => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3);
+  const upcoming = s.data.events.filter((e) => !!e.date && e.date >= today()).sort((a, b) => a.date!.localeCompare(b.date!)).slice(0, 3);
   const favs = items.filter((i) => i.favorite).slice(0, 8);
   const looks = s.data.looks.filter((l) => !l.deleted_at).sort((a, b) => b.updated_at.localeCompare(a.updated_at)).slice(0, 4);
   const hour = new Date().getHours();
   const hello = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   const byId = new Map(s.data.items.map((i) => [i.id, i]));
+  const [newCelebration, setNewCelebration] = useState(false);
+  const celebrations = [...s.data.celebrations].sort((a, b) => a.created_at.localeCompare(b.created_at));
 
   return (
     <div>
@@ -26,12 +30,40 @@ export function Home() {
         <p className="mute">{items.length} pieces · {s.data.looks.filter((l) => !l.deleted_at).length} looks · {upcoming.length ? `next event ${fmtDate(upcoming[0].date)}` : 'no events planned'}</p>
       </section>
 
+      {celebrations.map((c) => {
+        const subs = sortSubEvents(s.data.events.filter((e) => e.celebration_id === c.id));
+        const decided = subs.filter((e) => (e.options ?? []).some((o) => o.chosen)).length;
+        const next = subs.filter((e) => e.date && e.date >= today()).sort((a, b) => a.date!.localeCompare(b.date!))[0];
+        return (
+          <section key={c.id} className="card section" style={{ borderColor: 'var(--accent)', borderWidth: 2 }} aria-labelledby={`cel-${c.id}`}>
+            <a href={`#/celebration/${c.id}`} data-testid={`home-celebration-${c.id}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
+              <h2 id={`cel-${c.id}`} style={{ margin: 0 }}>💍 {c.name}</h2>
+              <p className="mute" style={{ margin: '4px 0 8px' }}>{subs.length} events · {decided} of {subs.length} outfits decided{next ? ` · next: ${next.title}, ${fmtDate(next.date)}` : ''}</p>
+              {subs.length > 0 && <div className="bar" aria-hidden="true"><i style={{ width: `${(decided / subs.length) * 100}%` }} /></div>}
+            </a>
+            <div className="chips scroll" style={{ marginTop: 10 }}>
+              {subs.map((e) => (
+                <a key={e.id} className={`chip${(e.options ?? []).some((o) => o.chosen) ? ' on' : ''}`} href={`#/event/${e.id}`} data-testid={`home-sub-${e.id}`} style={{ textDecoration: 'none' }}>
+                  {(e.options ?? []).some((o) => o.chosen) ? '⭐ ' : ''}{e.title}{e.date ? ` · ${fmtDate(e.date).replace(/ \d{4}$/, '')}` : ''}
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+
       <div className="menu" style={{ marginBottom: 18 }}>
         <a href="#/studio?shuffle=Daily" data-testid="home-what-to-wear"><Icon name="sparkle" />What should I wear today?</a>
         <a href="#/add" data-testid="home-add"><Icon name="camera" />Add photos</a>
         <a href="#/plan?new=1" data-testid="home-plan"><Icon name="calendar" />Plan an event</a>
         <a href="#/closet" data-testid="home-closet"><Icon name="closet" />Browse closet</a>
+        <button data-testid="home-new-celebration" onClick={() => setNewCelebration(true)}><Icon name="sparkle" />Plan a wedding or big family event</button>
       </div>
+      {newCelebration && (
+        <Sheet title="New wedding or family event" onClose={() => setNewCelebration(false)} marker="new-celebration-sheet">
+          <CelebrationForm onDone={async (c) => { await s.saveCelebration(c); setNewCelebration(false); navigate(`/celebration/${c.id}`); }} />
+        </Sheet>
+      )}
 
       {(attention.length > 0 || review.length > 0) && (
         <section className="section" aria-labelledby="attn-h">

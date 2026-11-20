@@ -230,7 +230,7 @@ export function slug(s: string) { return s.toLowerCase().replace(/[^a-z0-9]+/g, 
 export function fmtDate(d: string | null | undefined) {
   if (!d) return '';
   const t = new Date(`${d.slice(0, 10)}T12:00:00`);
-  return t.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  return t.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export function daysFrom(d: string, from = new Date().toISOString().slice(0, 10)) {
