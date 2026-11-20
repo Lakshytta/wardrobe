@@ -6,6 +6,8 @@ body {
 }
 img { max-width: 100%; display: block; }
 h1, h2, h3 { font-family: var(--fd); font-weight: 700; line-height: 1.15; margin: 0 0 .4em; letter-spacing: .01em; }
+/* Long unbroken names (pasted links, no spaces) must wrap instead of widening the page. */
+h1, h2, h3, p, li, td, label { overflow-wrap: anywhere; }
 h1 { font-size: 2rem; } h2 { font-size: 1.55rem; } h3 { font-size: 1.25rem; }
 p { margin: 0 0 .8em; }
 a { color: var(--accent); }
@@ -144,6 +146,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 .listrow img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; background: var(--mat); flex: none; }
 .listrow .t { font-weight: 600; }
 .split { display: grid; gap: 18px; }
+/* Grid items default to min-width:auto, so a wide scroll strip inside one would stretch the whole page. */
+.split > * { min-width: 0; }
 @media (min-width: 900px) { .split { grid-template-columns: 1.1fr 1fr; align-items: start; } }
 .photo-zoom { position: relative; overflow: hidden; border-radius: var(--radius); background: var(--mat); touch-action: none; }
 .photo-zoom img { width: 100%; max-height: 72dvh; object-fit: contain; transform-origin: 0 0; user-select: none; -webkit-user-drag: none; }
@@ -202,3 +206,5 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 }
 @media (max-width: 400px) { .hide-xs { display: none; } }
 .sr-only[data-testid="skip-link"]:focus { position: fixed; left: 8px; top: 8px; width: auto; height: auto; clip: auto; margin: 0; padding: 10px 16px; background: var(--surface); color: var(--ink); z-index: 100; border-radius: 12px; white-space: normal; }
+/* List links (e.g. Insights most/least worn) get a 24px+ tap target. */
+main ol > li > a { display: inline-block; padding-block: 3px; }
