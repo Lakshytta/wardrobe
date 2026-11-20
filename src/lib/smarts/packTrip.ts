@@ -52,25 +52,31 @@ export function packTrip(trip: Pick<Trip, 'start_date' | 'end_date' | 'name'>, e
   while (assigned.size < slots.length) {
     let bestC: Combo | null = null; let bestVal = 0;
     for (const c of combos) {
-      const newly = [...c.covers].filter((x) => !assigned.has(x)).length;
+      // repeat guard within a trip: the same people see every event, so each event gets its own main piece
+      if (usedMains.has(c.ids[0])) continue;
+      const newly = Math.min(1, [...c.covers].filter((x) => !assigned.has(x)).length);
       if (!newly) continue;
       const cost = c.ids.filter((id) => !packed.has(id)).length;
       // packing nothing new is ideal; prefer fewer new pieces, then higher score, then main variety
-      const val = (newly / (cost + 0.25)) + c.score / 100 - (usedMains.get(c.ids[0]) ?? 0) * 0.05;
+      const val = (newly / (cost + 0.25)) + c.score / 100;
       if (val > bestVal) { bestVal = val; bestC = c; }
     }
     if (!bestC) break;
     bestC.ids.forEach((id) => packed.add(id));
-    for (const x of bestC.covers) if (!assigned.has(x)) { assigned.set(x, bestC.ids); usedMains.set(bestC.ids[0], (usedMains.get(bestC.ids[0]) ?? 0) + 1); }
+    // a main covers one event; pick the uncovered event it suits best (fewest other options first)
+    const open = [...bestC.covers].filter((x) => !assigned.has(x));
+    const options = (x: number) => combos.filter((c) => c.covers.has(x) && !usedMains.has(c.ids[0])).length;
+    const target = open.sort((a, b) => options(a) - options(b))[0];
+    assigned.set(target, bestC.ids);
+    usedMains.set(bestC.ids[0], 1);
   }
 
   // re-assign for variety: within packed pieces, give each slot the best unused combo
   const packedCombos = combos.filter((c) => c.ids.every((id) => packed.has(id)));
-  const usedCombo = new Set<string>();
   const outfits = slots.map((s, idx) => {
-    const options = packedCombos.filter((c) => c.covers.has(idx)).sort((a, b) => b.score - a.score);
-    const pick = options.find((c) => !usedCombo.has(c.ids.join('+'))) ?? options[0];
-    if (pick) usedCombo.add(pick.ids.join('+'));
+    const main = assigned.get(idx)?.[0];
+    // best blouse among packed ones for this event's main
+    const pick = packedCombos.filter((c) => c.ids[0] === main && c.covers.has(idx)).sort((a, b) => b.score - a.score)[0];
     return { event_id: s.event_id, label: s.label, item_ids: pick?.ids ?? assigned.get(idx) ?? [] };
   });
 
@@ -84,7 +90,7 @@ export function packTrip(trip: Pick<Trip, 'start_date' | 'end_date' | 'name'>, e
   const uncovered = slots.length - outfits.filter((o) => o.item_ids.length).length;
   const why = slots.length === 0
     ? 'Add trip dates or events to build a packing list.'
-    : `${packedMains} main piece${packedMains === 1 ? '' : 's'}${packedTops ? ` × ${packedTops} blouse${packedTops === 1 ? '' : 's'}` : ''} give ${distinct} outfit${distinct === 1 ? '' : 's'} scoring ${GOOD}+ for ${slots.length} ${events.length ? 'event' : 'day'}${slots.length === 1 ? '' : 's'}.` +
+    : `${packedMains} main piece${packedMains === 1 ? '' : 's'}${packedTops ? ` × ${packedTops} blouse${packedTops === 1 ? '' : 's'}` : ''} ${packedMains + packedTops === 1 ? 'gives' : 'give'} ${distinct} outfit${distinct === 1 ? '' : 's'} scoring ${GOOD}+ for ${slots.length} ${events.length ? 'event' : 'day'}${slots.length === 1 ? '' : 's'}, with a different main piece each time.` +
       (uncovered ? ` ${uncovered} ${uncovered === 1 ? 'needs' : 'need'} an outfit — nothing available scores ${GOOD}+ for that occasion.` : '');
   const essentials = [...PACKING_ESSENTIALS.any];
   if (items.some((id) => pool.find((i) => i.id === id)?.category_id === 'sarees')) essentials.unshift(...PACKING_ESSENTIALS.saree);

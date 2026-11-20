@@ -208,6 +208,8 @@ describe('packing', () => {
     expect(r.items.length).toBeLessThanOrEqual(8);
     expect(r.why).toMatch(/outfit/);
     for (const o of r.outfits) for (const i of o.item_ids) expect(r.items).toContain(i);
+    const mains = r.outfits.map((o) => o.item_ids[0]);
+    expect(new Set(mains).size).toBe(mains.length); // no repeated main on one trip
   });
   it('maximises mix-and-match: blouses are reused across sarees', () => {
     const sareeOnly = { items: SEED_ITEMS.filter((i) => ['sarees', 'blouses'].includes(i.category_id)), categories: DEFAULT_CATEGORIES };
