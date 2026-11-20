@@ -1,0 +1,570 @@
+[
+ {
+  "ref": "p4851",
+  "name": "Emerald silk blouse",
+  "details": "Raw-silk body with scattered sequin buttis; zari and sequin cuff borders",
+  "category_id": "blouses",
+  "primary_color": "green",
+  "accent_colors": [
+   "gold"
+  ],
+  "fabric": "Raw silk",
+  "work": "Sequin buttis, zari border",
+  "occasions": [
+   "Festive",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4850",
+  "name": "Antique gold tissue blouse",
+  "details": "Tissue body with floral zardozi and bead work on the sleeves and neckline",
+  "category_id": "blouses",
+  "primary_color": "gold",
+  "accent_colors": [
+   "maroon"
+  ],
+  "fabric": "Tissue",
+  "work": "Zardozi, beads",
+  "occasions": [
+   "Wedding",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4849",
+  "name": "Navy brocade-yoke blouse",
+  "details": "Brocade yoke panel, sequin borders and red embroidered cuffs. Tag still on",
+  "category_id": "blouses",
+  "primary_color": "navy",
+  "accent_colors": [
+   "gold",
+   "red"
+  ],
+  "fabric": "Silk",
+  "work": "Brocade, sequins",
+  "occasions": [
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4848",
+  "name": "Bottle green zardozi blouse",
+  "details": "Gold leaf zardozi with maroon roses at the neck and sleeves",
+  "category_id": "blouses",
+  "primary_color": "green",
+  "accent_colors": [
+   "gold",
+   "maroon"
+  ],
+  "fabric": "Raw silk",
+  "work": "Zardozi",
+  "occasions": [
+   "Wedding",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4847",
+  "name": "Ivory and gold brocade blouse",
+  "details": "All-over damask brocade; covered buttons on sleeves and back",
+  "category_id": "blouses",
+  "primary_color": "gold",
+  "accent_colors": [
+   "ivory"
+  ],
+  "fabric": "Brocade",
+  "work": "Woven brocade",
+  "occasions": [
+   "Festive",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4846",
+  "name": "Black and copper brocade blouse",
+  "details": "High neck with keyhole front, copper-toned floral brocade",
+  "category_id": "blouses",
+  "primary_color": "black",
+  "accent_colors": [
+   "copper"
+  ],
+  "fabric": "Brocade",
+  "work": "Woven brocade",
+  "occasions": [
+   "Evening/Party",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4845",
+  "name": "Gold woven-stripe blouse",
+  "details": "Fine gold woven stripes, tie-back with tassel drop",
+  "category_id": "blouses",
+  "primary_color": "gold",
+  "accent_colors": [],
+  "fabric": "Tissue",
+  "work": "Woven stripes",
+  "occasions": [
+   "Festive",
+   "Evening/Party"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4844",
+  "name": "Gold tissue and organza blouse",
+  "details": "Crushed gold tissue body, sheer beige organza yoke and sleeves, button cuffs",
+  "category_id": "blouses",
+  "primary_color": "gold",
+  "accent_colors": [
+   "beige"
+  ],
+  "fabric": "Tissue, organza",
+  "work": "Crushed tissue",
+  "occasions": [
+   "Evening/Party",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4843",
+  "name": "Magenta blouse with embroidered collar",
+  "details": "Solid magenta silk with a zardozi flower border around the collar",
+  "category_id": "blouses",
+  "primary_color": "magenta",
+  "accent_colors": [
+   "gold"
+  ],
+  "fabric": "Raw silk",
+  "work": "Zardozi",
+  "occasions": [
+   "Festive",
+   "Wedding"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4842",
+  "name": "Purple floral blouse with zardozi",
+  "details": "Printed purple-and-magenta floral base, gold leaf zardozi border, pearls, tie-back",
+  "category_id": "blouses",
+  "primary_color": "purple",
+  "accent_colors": [
+   "magenta",
+   "gold"
+  ],
+  "fabric": "Organza",
+  "work": "Zardozi, pearls",
+  "occasions": [
+   "Festive",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4841",
+  "name": "Rust Kalamkari lotus saree",
+  "details": "Kalamkari-style lotus print on rust, with a red and gold woven border",
+  "category_id": "sarees",
+  "primary_color": "rust",
+  "accent_colors": [
+   "red",
+   "gold",
+   "multi"
+  ],
+  "fabric": "Silk",
+  "work": "Kalamkari print, zari border",
+  "occasions": [
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4840",
+  "name": "Black pre-draped saree",
+  "details": "Ready-to-wear drape with a silver and gold sequin diagonal panel",
+  "category_id": "sarees",
+  "primary_color": "black",
+  "accent_colors": [
+   "silver",
+   "gold"
+  ],
+  "fabric": "Georgette",
+  "work": "Sequins",
+  "occasions": [
+   "Evening/Party"
+  ],
+  "season": "All-season",
+  "tags": [
+   "Indo-Western"
+  ]
+ },
+ {
+  "ref": "p4837",
+  "name": "Blush organza floral saree",
+  "details": "Scalloped border with multicolour floral embroidery; matching blouse",
+  "category_id": "sarees",
+  "primary_color": "blush",
+  "accent_colors": [
+   "multi"
+  ],
+  "fabric": "Organza",
+  "work": "Thread embroidery",
+  "occasions": [
+   "Wedding guest",
+   "Day function"
+  ],
+  "season": "Summer",
+  "tags": []
+ },
+ {
+  "ref": "p4833",
+  "name": "Ivory chikankari mirror-work saree",
+  "details": "All-over chikankari with mirror work",
+  "category_id": "sarees",
+  "primary_color": "ivory",
+  "accent_colors": [],
+  "fabric": "Georgette",
+  "work": "Chikankari, mirror",
+  "occasions": [
+   "Festive",
+   "Day function"
+  ],
+  "season": "Summer",
+  "tags": []
+ },
+ {
+  "ref": "p4832",
+  "name": "Copper tissue bird-and-flower saree",
+  "details": "Peach-copper tissue with colourful woven birds and blooms, yellow-gold border",
+  "category_id": "sarees",
+  "primary_color": "copper",
+  "accent_colors": [
+   "multi",
+   "gold"
+  ],
+  "fabric": "Tissue",
+  "work": "Woven motifs",
+  "occasions": [
+   "Festive",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4831",
+  "name": "Bottle green Parsi gara saree",
+  "details": "Ivory birds and flowers embroidered all over",
+  "category_id": "sarees",
+  "primary_color": "green",
+  "accent_colors": [
+   "ivory"
+  ],
+  "fabric": "Georgette",
+  "work": "Parsi gara embroidery",
+  "occasions": [
+   "Wedding",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4830",
+  "name": "Navy Parsi gara saree",
+  "details": "Multicolour birds, jasmine and vines on georgette",
+  "category_id": "sarees",
+  "primary_color": "navy",
+  "accent_colors": [
+   "multi"
+  ],
+  "fabric": "Georgette",
+  "work": "Parsi gara embroidery",
+  "occasions": [
+   "Wedding",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4835",
+  "name": "Navy heart-motif kurta set",
+  "details": "Printed kurta and straight pants with a red and ivory zigzag kantha-style dupatta",
+  "category_id": "suits",
+  "primary_color": "navy",
+  "accent_colors": [
+   "red",
+   "ivory"
+  ],
+  "fabric": "Cotton silk",
+  "work": "Print, kantha",
+  "occasions": [
+   "Casual",
+   "Work"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4829",
+  "name": "Beige-gold gota sharara set",
+  "details": "Gota-work kurta, tiered sharara and olive net dupatta",
+  "category_id": "suits",
+  "primary_color": "beige",
+  "accent_colors": [
+   "gold",
+   "olive"
+  ],
+  "fabric": "Chanderi",
+  "work": "Gota",
+  "occasions": [
+   "Wedding",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4838",
+  "name": "Blush gota-work kurta set",
+  "details": "Striped gota and sequin yoke; net dupatta with embroidered borders",
+  "category_id": "suits",
+  "primary_color": "blush",
+  "accent_colors": [
+   "gold"
+  ],
+  "fabric": "Chanderi, net",
+  "work": "Gota, sequins",
+  "occasions": [
+   "Wedding guest",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4834",
+  "name": "Teal ombre gota-patti set",
+  "details": "Honeycomb gota-patti on the kurta, net dupatta, straight pants",
+  "category_id": "suits",
+  "primary_color": "teal",
+  "accent_colors": [
+   "gold"
+  ],
+  "fabric": "Chanderi",
+  "work": "Gota-patti",
+  "occasions": [
+   "Festive",
+   "Day function"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4828",
+  "name": "Blue kurta with turquoise Banarasi dupatta",
+  "details": "Plain cobalt kurta; turquoise silk dupatta with woven buttis and silver-zari border",
+  "category_id": "suits",
+  "primary_color": "blue",
+  "accent_colors": [
+   "turquoise",
+   "silver"
+  ],
+  "fabric": "Cotton, Banarasi silk",
+  "work": "Woven zari",
+  "occasions": [
+   "Festive",
+   "Work"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4824",
+  "name": "Red chikankari anarkali",
+  "details": "Red anarkali with white chikankari and gota flowers; plain red dupatta",
+  "category_id": "suits",
+  "primary_color": "red",
+  "accent_colors": [
+   "white"
+  ],
+  "fabric": "Georgette",
+  "work": "Chikankari, gota",
+  "occasions": [
+   "Festive",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4822",
+  "name": "Navy velvet kurta with Kashmiri shawl",
+  "details": "Zardozi V-neck velvet kurta with an embroidered navy Kashmiri shawl",
+  "category_id": "suits",
+  "primary_color": "navy",
+  "accent_colors": [
+   "gold"
+  ],
+  "fabric": "Velvet, wool",
+  "work": "Zardozi, Kashmiri embroidery",
+  "occasions": [
+   "Wedding",
+   "Evening/Party"
+  ],
+  "season": "Winter",
+  "tags": []
+ },
+ {
+  "ref": "p4821",
+  "name": "Teal brocade anarkali set",
+  "details": "Brocade anarkali with an embroidered yoke; sheer gold dupatta with teal border",
+  "category_id": "suits",
+  "primary_color": "teal",
+  "accent_colors": [
+   "gold",
+   "beige"
+  ],
+  "fabric": "Brocade, organza",
+  "work": "Brocade, zari",
+  "occasions": [
+   "Wedding",
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4819",
+  "name": "Yellow crinkle kurta with bandhani dupatta",
+  "details": "Crinkle kurta with gold applique; turquoise Banarasi bandhani dupatta",
+  "category_id": "suits",
+  "primary_color": "yellow",
+  "accent_colors": [
+   "turquoise",
+   "gold"
+  ],
+  "fabric": "Crinkle cotton, silk",
+  "work": "Bandhani, applique",
+  "occasions": [
+   "Festive",
+   "Day function"
+  ],
+  "season": "Summer",
+  "tags": []
+ },
+ {
+  "ref": "p4818",
+  "name": "Maroon kurta with patola dupatta",
+  "details": "Gold block-printed motifs on maroon; ivory-black-red patola-print dupatta",
+  "category_id": "suits",
+  "primary_color": "maroon",
+  "accent_colors": [
+   "ivory",
+   "black",
+   "gold"
+  ],
+  "fabric": "Silk",
+  "work": "Block print, patola print",
+  "occasions": [
+   "Festive"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4816",
+  "name": "Green kurta with navy Banarasi dupatta",
+  "details": "Striped green silk kurta; navy buti dupatta with gold zari border",
+  "category_id": "suits",
+  "primary_color": "green",
+  "accent_colors": [
+   "navy",
+   "gold"
+  ],
+  "fabric": "Silk, Banarasi",
+  "work": "Woven buti, zari",
+  "occasions": [
+   "Festive",
+   "Wedding guest"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4815",
+  "name": "Olive velvet anarkali set",
+  "details": "Gold applique yoke; mustard Kashmiri shawl",
+  "category_id": "suits",
+  "primary_color": "olive",
+  "accent_colors": [
+   "mustard",
+   "gold"
+  ],
+  "fabric": "Velvet, wool",
+  "work": "Applique, Kashmiri embroidery",
+  "occasions": [
+   "Wedding",
+   "Evening/Party"
+  ],
+  "season": "Winter",
+  "tags": []
+ },
+ {
+  "ref": "p4798",
+  "name": "Red patola-print kurta set",
+  "details": "Patola-print kurta with a red dupatta and pink border",
+  "category_id": "suits",
+  "primary_color": "red",
+  "accent_colors": [
+   "pink",
+   "multi"
+  ],
+  "fabric": "Silk",
+  "work": "Patola print",
+  "occasions": [
+   "Festive",
+   "Casual"
+  ],
+  "season": "All-season",
+  "tags": []
+ },
+ {
+  "ref": "p4839",
+  "name": "Black cape top with trousers",
+  "details": "Black cape with gold metal trim over a black top; flared black trousers",
+  "category_id": "indo-western",
+  "primary_color": "black",
+  "accent_colors": [
+   "gold"
+  ],
+  "fabric": "Crepe",
+  "work": "Metal trim",
+  "occasions": [
+   "Evening/Party"
+  ],
+  "season": "All-season",
+  "tags": []
+ }
+]
