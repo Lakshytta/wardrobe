@@ -2,7 +2,12 @@
 const DB = 'wardrobe';
 const STORE = 'kv';
 
+let conn: Promise<IDBDatabase> | null = null;
 function open(): Promise<IDBDatabase> {
+  if (!conn) conn = openDb().catch((e) => { conn = null; throw e; });
+  return conn;
+}
+function openDb(): Promise<IDBDatabase> {
   return new Promise((res, rej) => {
     const r = indexedDB.open(DB, 1);
     r.onupgradeneeded = () => r.result.createObjectStore(STORE);

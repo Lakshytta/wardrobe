@@ -47,7 +47,7 @@ export default function Care() {
         </>
       )}
       {picking && (
-        <Sheet title="Which piece?" onClose={() => setPicking(false)} testid="care-pick-sheet">
+        <Sheet title="Which piece?" onClose={() => setPicking(false)} marker="care-pick-sheet">
           <div className="grid">
             {items.filter((i) => i.care_status === 'in_wardrobe').map((i) => (
               <button key={i.id} className="tile" data-testid={`care-pick-${i.id}`} onClick={() => { setPicking(false); setEditing(i); }}>
@@ -57,7 +57,7 @@ export default function Care() {
           </div>
         </Sheet>
       )}
-      {editing && <Sheet title={editing.name} onClose={() => setEditing(null)} testid="care-edit-sheet"><CareForm item={editing} onSave={async (i) => { await s.saveItem(i); setEditing(null); s.toast('Status updated'); }} /></Sheet>}
+      {editing && <Sheet title={editing.name} onClose={() => setEditing(null)} marker="care-edit-sheet"><CareForm item={editing} onSave={async (i) => { await s.saveItem(i); setEditing(null); s.toast('Status updated'); }} /></Sheet>}
     </div>
   );
 }

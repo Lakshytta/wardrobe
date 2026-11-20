@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import type { Item } from '../lib/types.ts';
 import { imgUrl } from '../lib/data/index.ts';
 import { swatchCss, prettyColour } from '../lib/smarts/colors.ts';
@@ -55,26 +56,39 @@ export function Swatch({ name, big }: { name: string; big?: boolean }) {
   return <span className={`swatch${big ? ' big' : ''}`} style={{ background: swatchCss(name) }} title={prettyColour(name)} />;
 }
 
-export function Sheet({ title, onClose, children, testid }: { title: string; onClose: () => void; children: ReactNode; testid?: string }) {
+export function Sheet({ title, onClose, children, marker }: { title: string; onClose: () => void; children: ReactNode; marker?: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     const first = ref.current?.querySelector<HTMLElement>('input,select,textarea,button:not(.iconbtn)') ?? ref.current;
-    first?.focus();
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    first?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeRef.current();
+      if (e.key === 'Tab' && ref.current) { // keep focus inside the dialog
+        const f = [...ref.current.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input,select,textarea')].filter((x) => x.offsetParent !== null);
+        if (!f.length) return;
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      }
+    };
     document.addEventListener('keydown', onKey);
-    return () => { document.removeEventListener('keydown', onKey); prev?.focus?.(); };
-  }, [onClose]);
-  return (
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = overflow; prev?.focus?.({ preventScroll: true }); };
+  }, []);
+  return createPortal(
     <div className="backdrop" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="sheet" role="dialog" aria-modal="true" aria-label={title} ref={ref} tabIndex={-1} data-testid={testid ? `v-${testid}` : undefined}>
+      <div className="sheet" role="dialog" aria-modal="true" aria-label={title} ref={ref} tabIndex={-1} data-testid={marker ? `v-${marker}` : undefined}>
         <div className="sheet-head">
           <h2>{title}</h2>
           <button className="iconbtn" onClick={onClose} aria-label="Close" data-testid="sheet-close"><Icon name="close" /></button>
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

@@ -9,3 +9,4 @@ seed-src
 *.log
 .vercel
 dist-demo
+screenshots

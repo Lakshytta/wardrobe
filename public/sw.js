@@ -3,9 +3,10 @@ const VERSION = 'v1';
 const SHELL = `shell-${VERSION}`;
 const PHOTOS = `photos-${VERSION}`;
 const MAX_PHOTOS = 200;
+const PRECACHE = []; // filled in at build time by vite.config.ts
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(SHELL).then((c) => c.addAll(['/', '/index.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png'])).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(SHELL).then((c) => c.addAll(['/', '/index.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png', ...PRECACHE])).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
@@ -26,13 +27,13 @@ self.addEventListener('fetch', (e) => {
   // navigations: network first, fall back to cached shell
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((r) => { const copy = r.clone(); caches.open(SHELL).then((c) => c.put('/index.html', copy)); return r; })
-      .catch(() => caches.match('/index.html')));
+      .catch(() => caches.match('/index.html', { ignoreVary: true })));
     return;
   }
   // photos: cache first, keep the most recent MAX_PHOTOS
   if (isPhoto) {
     e.respondWith(caches.open(PHOTOS).then(async (c) => {
-      const hit = await c.match(req);
+      const hit = await c.match(req, { ignoreVary: true });
       if (hit) return hit;
       const r = await fetch(req);
       if (r.ok || r.type === 'opaque') { c.put(req, r.clone()); trim(PHOTOS, MAX_PHOTOS); }
@@ -42,7 +43,7 @@ self.addEventListener('fetch', (e) => {
   }
   // same-origin static assets (hashed): cache first
   if (url.origin === self.location.origin) {
-    e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((r) => {
+    e.respondWith(caches.match(req, { ignoreVary: true }).then((hit) => hit || fetch(req).then((r) => {
       if (r.ok) { const copy = r.clone(); caches.open(SHELL).then((c) => c.put(req, copy)); }
       return r;
     })));

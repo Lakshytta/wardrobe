@@ -87,7 +87,7 @@ export default function TripDetail({ id }: { id: string }) {
           </section>
         </>
       )}
-      {editing && <Sheet title="Edit trip" onClose={() => setEditing(false)} testid="trip-edit-sheet"><TripForm initial={trip} onDone={async (t) => { await s.saveTrip(t); setEditing(false); }} /></Sheet>}
+      {editing && <Sheet title="Edit trip" onClose={() => setEditing(false)} marker="trip-edit-sheet"><TripForm initial={trip} onDone={async (t) => { await s.saveTrip(t); setEditing(false); }} /></Sheet>}
     </div>
   );
 }

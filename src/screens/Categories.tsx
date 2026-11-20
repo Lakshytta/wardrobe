@@ -33,7 +33,7 @@ export default function Categories() {
         ))}
       </div>
       {editing && (
-        <Sheet title={editing === 'new' ? 'New category' : `Edit ${editing.name}`} onClose={() => setEditing(null)} testid="cat-sheet">
+        <Sheet title={editing === 'new' ? 'New category' : `Edit ${editing.name}`} onClose={() => setEditing(null)} marker="cat-sheet">
           <form className="stack" onSubmit={async (e) => {
             e.preventDefault(); if (!name.trim()) return;
             if (editing === 'new') {

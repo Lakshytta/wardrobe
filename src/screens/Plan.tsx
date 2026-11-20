@@ -76,7 +76,7 @@ export default function Plan() {
       )}
 
       {creating && (
-        <Sheet title="New event" onClose={() => navigate('/plan', { replace: true })} testid="event-sheet">
+        <Sheet title="New event" onClose={() => navigate('/plan', { replace: true })} marker="event-sheet">
           <EventForm lookId={query.get('look')} date={query.get('date') ?? undefined} onDone={async (e) => { await s.saveEvent(e); s.toast(`“${e.title}” added`); navigate(`/event/${e.id}`, { replace: true }); }} />
         </Sheet>
       )}

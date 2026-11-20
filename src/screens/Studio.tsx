@@ -183,7 +183,7 @@ export default function Studio() {
           if (event) await s.saveEvent({ ...event, look_id: id });
           setSaving(false);
           s.toast(`Look “${name}” saved`);
-          navigate(event ? `/event/${event.id}` : `/look/${id}`);
+          navigate(event ? `/event/${event.id}` : `/look/${id}`, { replace: true });
         }} />
       )}
     </div>
@@ -234,7 +234,7 @@ function SaveLookSheet({ initial, occasion, onClose, onSave }: { initial?: Look;
   const [notes, setNotes] = useState(initial?.notes ?? '');
   const [busy, setBusy] = useState(false);
   return (
-    <Sheet title="Save this look" onClose={onClose} testid="save-look-sheet">
+    <Sheet title="Save this look" onClose={onClose} marker="save-look-sheet">
       <form className="stack" onSubmit={async (e) => { e.preventDefault(); setBusy(true); try { await onSave({ name: name.trim() || 'My look', occasion: occ, notes }); } finally { setBusy(false); } }}>
         <TextField label="Name" value={name} onChange={setName} testid="look-name" required />
         <SelectField label="Occasion" value={occ} onChange={setOcc} testid="look-occasion" options={DEFAULT_OCCASIONS.map((o) => ({ value: o, label: o }))} />

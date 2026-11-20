@@ -44,7 +44,7 @@ export default function Review() {
         </div>
       )}
       {editing && (
-        <Sheet title="Fix the details" onClose={() => setEditing(null)} testid="review-edit-sheet">
+        <Sheet title="Fix the details" onClose={() => setEditing(null)} marker="review-edit-sheet">
           <ItemForm item={editing} saveLabel="Save and add" onCancel={() => setEditing(null)} onSave={async (i) => { await s.saveItem({ ...i, status: 'active' }); setEditing(null); s.toast(`“${i.name}” added`); }} />
         </Sheet>
       )}

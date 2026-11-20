@@ -1,0 +1,142 @@
+import { test, expect, tap, fill, choose, go, SEED, toast } from './helpers.ts';
+
+test('piece page: zoom, favourite, edit every field, worn, history', async ({ app: page }) => {
+  await go(page, `/piece/${SEED.greenSaree}`);
+  await expect(page.locator('h1')).toHaveText('Bottle green Parsi gara saree');
+  await tap(page, 'zoom-in');
+  await tap(page, 'zoom-reset');
+  await tap(page, 'piece-fav');
+  await expect(page.getByTestId('piece-fav')).toHaveAttribute('aria-pressed', 'true');
+  await tap(page, 'piece-edit');
+  await fill(page, 'item-name', 'Bottle-green Parsi gara');
+  await choose(page, 'item-category', 'sarees');
+  await tap(page, 'item-primary-teal');
+  await tap(page, 'item-primary-green');
+  await tap(page, 'item-accent-gold');
+  await fill(page, 'item-fabric', 'Georgette');
+  await fill(page, 'item-work', 'Parsi gara');
+  await tap(page, 'item-occ-mehendi');
+  await choose(page, 'item-season', 'Winter');
+  await fill(page, 'item-details', 'Heirloom from Nani');
+  await fill(page, 'item-tags', 'heirloom, gara');
+  await fill(page, 'item-price', '45000');
+  await tap(page, 'item-save');
+  await expect(page.locator('h1')).toHaveText('Bottle-green Parsi gara');
+  await expect(page.getByText('Heirloom from Nani')).toBeVisible();
+  await expect(page.getByText('heirloom', { exact: true })).toBeVisible();
+  await tap(page, 'piece-edit');
+  await tap(page, 'item-cancel');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await tap(page, 'piece-worn');
+  await expect(page.locator('.listrow').filter({ hasText: /\d{4}/ }).first()).toBeVisible();
+  await expect(page.getByText(/per wear/)).toBeVisible();
+  const del = page.locator('[data-testid^="wear-del-"]').first();
+  const delId = (await del.getAttribute('data-testid'))!;
+  await tap(page, delId);
+  await tap(page, 'toast-undo');
+  await expect(page.getByTestId(delId)).toBeVisible();
+  // pairs + style links
+  await tap(page, `pair-${SEED.ivoryGoldBlouse}`);
+  await expect(page.locator('h1')).toContainText('Mix & Match');
+  await go(page, `/piece/${SEED.greenSaree}`);
+  await tap(page, 'piece-style');
+  await expect(page.getByTestId(`tray-${SEED.greenSaree}`)).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('piece with no 7+ pairing links to studio and insights', async ({ app: page }) => {
+  await go(page, '/piece/5eed0000-0000-4000-8000-000000004839');
+  await tap(page, 'piece-pairs-studio');
+  await expect(page.locator('h1')).toContainText('Mix & Match');
+  await go(page, '/piece/5eed0000-0000-4000-8000-000000004839');
+  await tap(page, 'piece-pairs-insights');
+  await expect(page.locator('h1')).toContainText('Insights');
+});
+
+test('care: tailor with due date, reminder, lending, back home', async ({ app: page }) => {
+  await go(page, `/piece/${SEED.rustSaree}`);
+  await tap(page, 'piece-care');
+  await tap(page, 'care-status-tailor');
+  await fill(page, 'care-contact', 'Rafiq Tailors');
+  await fill(page, 'care-due', '2026-01-05');
+  await fill(page, 'care-cost', '450');
+  await fill(page, 'care-note', 'Fall and pico');
+  await tap(page, 'care-save');
+  await expect(page.locator('#main').getByText(/At the tailor/)).toBeVisible();
+  await expect(page.getByText(/overdue/)).toBeVisible();
+  const dl = page.waitForEvent('download');
+  await tap(page, 'piece-reminder');
+  expect((await dl).suggestedFilename()).toMatch(/\.ics$/);
+  for (const st of ['dry_clean', 'repair', 'in_wardrobe']) {
+    await tap(page, 'piece-care');
+    await tap(page, `care-status-${st}`);
+    await tap(page, 'care-save');
+  }
+  await tap(page, 'piece-care');
+  await tap(page, 'care-status-lent');
+  await fill(page, 'care-lent-to', 'Priya');
+  await fill(page, 'care-due', '2099-12-01');
+  await tap(page, 'care-save');
+  await expect(page.getByText(/Lent out/).first()).toBeVisible();
+  await tap(page, 'nav-home');
+  await expect(page.getByTestId(`home-attn-${SEED.rustSaree}`)).toContainText('Priya');
+  await tap(page, `home-attn-${SEED.rustSaree}`);
+  await expect(page.locator('h1')).toContainText('Rust Kalamkari');
+  await tap(page, 'nav-home');
+  await tap(page, 'home-care');
+  await expect(page.locator('h1')).toContainText('Tailor');
+  await tap(page, `care-edit-${SEED.rustSaree}`);
+  await fill(page, 'care-note', 'For Diwali');
+  await tap(page, 'care-save');
+  await expect(page.getByText('For Diwali')).toBeVisible();
+  await tap(page, `care-returned-${SEED.rustSaree}`);
+  await tap(page, 'toast-undo');
+  await expect(page.getByTestId(`care-returned-${SEED.rustSaree}`)).toBeVisible();
+  await tap(page, `care-open-${SEED.rustSaree}`);
+  await expect(page.locator('h1')).toContainText('Rust Kalamkari');
+  // send another piece out from the Care screen
+  await go(page, '/care');
+  await tap(page, 'care-add');
+  await tap(page, `care-pick-${SEED.magentaBlouse}`);
+  await tap(page, 'care-status-dry_clean');
+  await tap(page, 'care-save');
+  await expect(page.getByTestId(`care-returned-${SEED.magentaBlouse}`)).toBeVisible();
+  await tap(page, `care-returned-${SEED.magentaBlouse}`);
+  await tap(page, `care-returned-${SEED.rustSaree}`);
+  await expect(page.getByText('Everything is at home')).toBeVisible();
+});
+
+test('delete → undo, delete → trash → restore, purge, empty trash', async ({ app: page }) => {
+  await go(page, `/piece/${SEED.navyKurta}`);
+  await tap(page, 'piece-delete');
+  const t = await toast(page);
+  await expect(t).toContainText('moved to Trash');
+  await tap(page, 'toast-undo');
+  await expect(page.getByTestId(`tile-${SEED.navyKurta}`)).toBeVisible();
+  await go(page, `/piece/${SEED.navyKurta}`);
+  await tap(page, 'piece-delete');
+  await tap(page, 'toast-dismiss');
+  await expect(page.getByTestId(`tile-${SEED.navyKurta}`)).toHaveCount(0);
+  await go(page, `/piece/${SEED.navyKurta}`);
+  await expect(page.getByText('This piece is in Trash.')).toBeVisible();
+  await tap(page, 'piece-restore');
+  await expect(page.getByText('This piece is in Trash.')).toHaveCount(0);
+  // trash screen
+  await tap(page, 'piece-delete');
+  await go(page, `/piece/${SEED.redAnarkali}`);
+  await tap(page, 'piece-delete');
+  await tap(page, 'nav-more');
+  await tap(page, 'more-trash');
+  await tap(page, `trash-restore-${SEED.navyKurta}`);
+  await expect(page.getByTestId(`trash-restore-${SEED.navyKurta}`)).toHaveCount(0);
+  await tap(page, `trash-purge-${SEED.redAnarkali}`);
+  await expect(page.getByText('Trash is empty')).toBeVisible();
+  await go(page, `/piece/${SEED.redAnarkali}`);
+  await expect(page.getByText("This piece isn't here")).toBeVisible();
+  await tap(page, 'piece-missing-closet');
+  await expect(page.getByTestId('v-result-count')).toHaveText('All 30 pieces');
+  await go(page, `/piece/${SEED.navyKurta}`);
+  await tap(page, 'piece-delete');
+  await go(page, '/more/trash');
+  await tap(page, 'trash-empty');
+  await expect(page.getByText('Trash is empty')).toBeVisible();
+});

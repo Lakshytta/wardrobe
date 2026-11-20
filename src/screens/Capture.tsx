@@ -163,7 +163,7 @@ export default function Capture() {
       {errors.length > 0 && <div className="warnbox" role="alert">{errors.map((e, i) => <p key={i} style={{ margin: 0 }}>{e}</p>)}</div>}
 
       {dupe && (
-        <Sheet title="Is this already in your wardrobe?" onClose={() => void resolveDupe(false)} testid="dupe-sheet">
+        <Sheet title="Is this already in your wardrobe?" onClose={() => void resolveDupe(false)} marker="dupe-sheet">
           <p>This photo looks very like <strong>{dupe.dupes[0].name}</strong>.</p>
           <div className="row" style={{ flexWrap: 'nowrap' }}>
             <figure style={{ margin: 0, flex: 1 }}><img src={dupe.preview} alt="New photo" style={{ borderRadius: 12 }} /><figcaption className="small mute">New photo</figcaption></figure>

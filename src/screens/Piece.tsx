@@ -138,8 +138,8 @@ export default function Piece({ id }: { id: string }) {
         ) : <p className="mute">Not worn yet. Tap “Worn today”, or plan it for an event.</p>}
       </section>
 
-      {sheet === 'edit' && <Sheet title="Edit piece" onClose={() => setSheet(null)} testid="edit-sheet"><ItemForm item={item} onCancel={() => setSheet(null)} onSave={async (i) => { await s.saveItem(i); setSheet(null); s.toast('Saved'); }} /></Sheet>}
-      {sheet === 'care' && <Sheet title="Where is it?" onClose={() => setSheet(null)} testid="care-sheet"><CareForm item={item} onSave={async (i) => { await s.saveItem(i); setSheet(null); s.toast('Status updated'); }} /></Sheet>}
+      {sheet === 'edit' && <Sheet title="Edit piece" onClose={() => setSheet(null)} marker="edit-sheet"><ItemForm item={item} onCancel={() => setSheet(null)} onSave={async (i) => { await s.saveItem(i); setSheet(null); s.toast('Saved'); }} /></Sheet>}
+      {sheet === 'care' && <Sheet title="Where is it?" onClose={() => setSheet(null)} marker="care-sheet"><CareForm item={item} onSave={async (i) => { await s.saveItem(i); setSheet(null); s.toast('Status updated'); }} /></Sheet>}
     </div>
   );
 }

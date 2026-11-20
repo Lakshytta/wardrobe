@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useStore, useWardrobe } from '../lib/store.tsx';
-import { back, navigate } from '../lib/router.ts';
+import { navigate } from '../lib/router.ts';
 import { imgUrl } from '../lib/data/index.ts';
 import { uuid } from '../lib/data/adapter.ts';
 import { repeatGuard } from '../lib/smarts/repeatGuard.ts';
@@ -23,7 +23,7 @@ export default function EventDetail({ id }: { id: string }) {
   return (
     <div>
       <div className="row between">
-        <button className="btn ghost" onClick={() => back('/plan')} data-testid="event-back"><Icon name="back" /> Back</button>
+        <button className="btn ghost" onClick={() => navigate('/plan')} data-testid="event-back"><Icon name="back" /> Back</button>
         <div className="row">
           <button className="iconbtn" aria-label="Edit event" data-testid="event-edit" onClick={() => setSheet('edit')}><Icon name="edit" /></button>
           <button className="iconbtn" aria-label="Delete event" data-testid="event-delete" onClick={async () => { await s.deleteEvent(ev); navigate('/plan'); }}><Icon name="trash" /></button>
@@ -66,9 +66,9 @@ export default function EventDetail({ id }: { id: string }) {
         {!look && !ev.worn && <p className="small mute" style={{ marginTop: 6 }}>Plan an outfit first, then mark it as worn after the event.</p>}
       </section>
 
-      {sheet === 'edit' && <Sheet title="Edit event" onClose={() => setSheet(null)} testid="event-edit-sheet"><EventForm initial={ev} onDone={async (e) => { await s.saveEvent(e); setSheet(null); s.toast('Event updated'); }} /></Sheet>}
+      {sheet === 'edit' && <Sheet title="Edit event" onClose={() => setSheet(null)} marker="event-edit-sheet"><EventForm initial={ev} onDone={async (e) => { await s.saveEvent(e); setSheet(null); s.toast('Event updated'); }} /></Sheet>}
       {sheet === 'pick' && (
-        <Sheet title="Choose a look" onClose={() => setSheet(null)} testid="pick-look-sheet">
+        <Sheet title="Choose a look" onClose={() => setSheet(null)} marker="pick-look-sheet">
           <div className="list">
             {looks.map((l) => {
               const w = repeatGuard(l.item_ids, ev.date, ev.people, s.data.wears, s.data.events, wardrobe, { ignoreEventId: ev.id });

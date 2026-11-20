@@ -43,10 +43,23 @@ export class MemoryAdapter implements DataAdapter {
     if (!saved) await idbSet(KEY, this.db);
     return this.db;
   }
-  private persist() { if (this.db) void idbSet(KEY, this.db); }
+  private chain: Promise<void> = Promise.resolve();
+  private dirty = false;
+  /** Coalesced, serialised write of the whole demo DB (one write in flight at a time). */
+  private persist() {
+    this.dirty = true;
+    const w = window as unknown as { __memoryWrites?: number };
+    w.__memoryWrites = (w.__memoryWrites ?? 0) + 1;
+    this.chain = this.chain.then(async () => {
+      if (this.dirty && this.db) { this.dirty = false; await idbSet(KEY, this.db); }
+    }).finally(() => { w.__memoryWrites = (w.__memoryWrites ?? 1) - 1; });
+    return this.chain;
+  }
   private emit(c: Change) { this.chan?.postMessage(c); }
 
-  async listProfiles(): Promise<Profile[]> { return Object.values((await this.load()).profiles).sort((a, b) => a.sort - b.sort); }
+  async listProfiles(): Promise<Profile[]> {
+    // test hook (demo adapter only): ?demo=1&fail=load simulates a failed first load
+    if (typeof location !== 'undefined' && /[?&]fail=load/.test(location.search)) throw new Error('Simulated load failure'); return Object.values((await this.load()).profiles).sort((a, b) => a.sort - b.sort); }
   async listCategories(): Promise<Category[]> { return Object.values((await this.load()).categories).sort((a, b) => a.sort - b.sort); }
   async loadProfile(pid: string): Promise<ProfileData> {
     const db = await this.load();
@@ -56,12 +69,12 @@ export class MemoryAdapter implements DataAdapter {
   async upsert<T extends { id: string }>(table: TableName, row: T) {
     const db = await this.load();
     db[table][row.id] = structuredClone(row);
-    this.persist(); this.emit({ table, type: 'upsert', row });
+    await this.persist(); this.emit({ table, type: 'upsert', row });
   }
   async remove(table: TableName, id: string) {
     const db = await this.load();
     delete db[table][id];
-    this.persist(); this.emit({ table, type: 'delete', row: { id } });
+    await this.persist(); this.emit({ table, type: 'delete', row: { id } });
   }
   async uploadImage(_p: string, _o: string, _k: string, blob: Blob) { return blobToDataUrl(blob); }
   async removeImages() { /* data URLs live on the row */ }

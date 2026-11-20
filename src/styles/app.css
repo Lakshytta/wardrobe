@@ -167,7 +167,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .calendar .dow { text-align: center; font-size: .8rem; color: var(--mute); font-weight: 700; }
 .calendar button { min-height: 44px; border-radius: 10px; border: 1px solid transparent; background: var(--surface); cursor: pointer; position: relative; }
-.calendar button.other { color: var(--mute); opacity: .55; }
+.calendar button.other { color: var(--mute); background: transparent; }
 .calendar button.today { border-color: var(--accent); }
 .calendar button.has::after { content: ''; position: absolute; bottom: 5px; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--accent); }
 .calendar button.sel { background: var(--tint); }
@@ -201,3 +201,4 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
   .print-grid figcaption { padding: 6px 8px; font-size: 10pt; }
 }
 @media (max-width: 400px) { .hide-xs { display: none; } }
+.sr-only[data-testid="skip-link"]:focus { position: fixed; left: 8px; top: 8px; width: auto; height: auto; clip: auto; margin: 0; padding: 10px 16px; background: var(--surface); color: var(--ink); z-index: 100; border-radius: 12px; white-space: normal; }

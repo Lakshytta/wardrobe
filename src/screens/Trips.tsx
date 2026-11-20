@@ -22,7 +22,7 @@ export default function Trips() {
           ))}
         </div>
       )}
-      {creating && <Sheet title="New trip" onClose={() => setCreating(false)} testid="trip-sheet"><TripForm onDone={async (t) => { await s.saveTrip(t); setCreating(false); navigate(`/trip/${t.id}`); }} /></Sheet>}
+      {creating && <Sheet title="New trip" onClose={() => setCreating(false)} marker="trip-sheet"><TripForm onDone={async (t) => { await s.saveTrip(t); setCreating(false); navigate(`/trip/${t.id}`); }} /></Sheet>}
     </div>
   );
 }

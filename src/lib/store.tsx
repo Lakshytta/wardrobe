@@ -98,13 +98,13 @@ function useStoreValue() {
   const put = useCallback(async <T extends { id: string }>(table: TableName, row: T) => {
     const key = TABLE_KEY[table];
     if (key) setData((d) => ({ ...d, [key]: upsertBy(d[key] as any[], row) }));
-    try { await adapter.upsert(table, row); } catch (e) { fail(e); }
+    adapter.upsert(table, row).catch(fail); // optimistic: the UI never waits for the network
   }, [fail]);
 
   const del = useCallback(async (table: TableName, id: string) => {
     const key = TABLE_KEY[table];
     if (key) setData((d) => ({ ...d, [key]: (d[key] as any[]).filter((r) => r.id !== id) }));
-    try { await adapter.remove(table, id); } catch (e) { fail(e); }
+    adapter.remove(table, id).catch(fail);
   }, [fail]);
 
   // ---------- profiles ----------

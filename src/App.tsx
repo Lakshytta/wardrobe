@@ -4,6 +4,7 @@ import { useRoute } from './lib/router.ts';
 import { Icon, Toasts } from './components/ui.tsx';
 import { ProfileSwitcher } from './components/Profiles.tsx';
 import { Home } from './screens/Home.tsx';
+import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 
 const Closet = lazy(() => import('./screens/Closet.tsx'));
 const Piece = lazy(() => import('./screens/Piece.tsx'));
@@ -66,7 +67,7 @@ function Shell() {
   const r = useRoute();
   return (
     <div className="app">
-      <a href="#main" className="sr-only" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>Skip to content</a>
+      <a href="#main" className="sr-only" data-testid="skip-link" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>Skip to content</a>
       <header className="topbar">
         <a href="#/" className="brand" data-testid="brand-home" aria-label="Wardrobe home">
           <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0B6B62" /><path d="M9 9h14v15H9zM16 9v15" stroke="#fff" strokeWidth="1.8" fill="none" /><circle cx="13.5" cy="17" r="1.1" fill="#fff" /><circle cx="18.5" cy="17" r="1.1" fill="#fff" /></svg>
@@ -86,7 +87,7 @@ function Shell() {
       <main id="main" tabIndex={-1}>
         {!s.ready ? <p className="mute" role="status">Opening your wardrobe…</p>
           : s.error ? <div className="empty card"><h3>Something went wrong</h3><p>{s.error}</p><button className="btn primary" data-testid="reload" onClick={() => location.reload()}>Try again</button></div>
-          : <Suspense fallback={<p className="mute" role="status">Loading…</p>}><Screen /></Suspense>}
+          : <ErrorBoundary resetKey={r.path}><Suspense fallback={<p className="mute" role="status">Loading…</p>}><Screen /></Suspense></ErrorBoundary>}
       </main>
       <Toasts />
     </div>

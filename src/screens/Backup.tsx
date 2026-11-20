@@ -49,7 +49,7 @@ export default function Backup() {
         {err && <p className="warnbox" role="alert">{err}</p>}
       </section>
       {pending && (
-        <Sheet title="Restore this backup?" onClose={() => setPending(null)} testid="restore-sheet">
+        <Sheet title="Restore this backup?" onClose={() => setPending(null)} marker="restore-sheet">
           <p>From <strong>{pending.profile?.name}</strong>, saved {new Date(pending.exported_at).toLocaleString()}:</p>
           <ul><li>{pending.items.length} pieces</li><li>{pending.looks.length} looks</li><li>{pending.events.length} events</li><li>{pending.wears.length} wears</li><li>{pending.trips.length} trips</li></ul>
           <div className="row end">

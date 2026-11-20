@@ -49,7 +49,7 @@ export default function LookDetail({ id }: { id: string }) {
       </div>
       {look.verdict && <VerdictCard v={look.verdict} byId={byId} />}
       {editing && (
-        <Sheet title="Edit look" onClose={() => setEditing(false)} testid="look-edit-sheet">
+        <Sheet title="Edit look" onClose={() => setEditing(false)} marker="look-edit-sheet">
           <form className="stack" onSubmit={async (e) => { e.preventDefault(); await s.saveLook({ ...look, name: name.trim() || look.name, occasion: occ, notes }); setEditing(false); s.toast('Look updated'); }}>
             <TextField label="Name" value={name} onChange={setName} testid="look-edit-name" />
             <SelectField label="Occasion" value={occ} onChange={setOcc} testid="look-edit-occasion" options={DEFAULT_OCCASIONS.map((o) => ({ value: o, label: o }))} />

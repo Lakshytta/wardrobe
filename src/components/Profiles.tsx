@@ -49,7 +49,7 @@ export function ProfileSwitcher() {
         <span className="nm">{profile?.name ?? 'Choose'}</span>
       </button>
       {open && (
-        <Sheet title={editing === 'new' ? 'Add a family member' : editing ? `Edit ${editing.name}` : 'Whose wardrobe?'} onClose={close} testid="profiles-sheet">
+        <Sheet title={editing === 'new' ? 'Add a family member' : editing ? `Edit ${editing.name}` : 'Whose wardrobe?'} onClose={close} marker="profiles-sheet">
           {editing ? (
             <ProfileEditor initial={editing === 'new' ? undefined : editing} onDone={async (p) => { if (editing === 'new') await switchProfile(p.id); close(); }} />
           ) : (

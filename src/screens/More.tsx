@@ -43,7 +43,7 @@ export default function More() {
         <p className="small">Everyone with the link can open this wardrobe — there is no login. Deleted things go to Trash for 30 days, and you can download a backup any time.</p>
         <p className="small mute">Style tips are worked out on this device from colour, fabric and occasion rules. {s.adapterKind === 'memory' ? 'Demo mode: changes are saved in this browser only.' : s.pending ? `${s.pending} change(s) waiting for internet.` : 'All changes are saved.'}</p>
       </section>
-      {adding && <Sheet title="Add a family member" onClose={() => setAdding(false)} testid="more-profile-sheet"><ProfileEditor onDone={async (p) => { setAdding(false); await s.switchProfile(p.id); s.toast(`Now showing ${p.name}'s wardrobe`); }} /></Sheet>}
+      {adding && <Sheet title="Add a family member" onClose={() => setAdding(false)} marker="more-profile-sheet"><ProfileEditor onDone={async (p) => { setAdding(false); await s.switchProfile(p.id); s.toast(`Now showing ${p.name}'s wardrobe`); }} /></Sheet>}
     </div>
   );
 }
