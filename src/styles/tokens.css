@@ -1,0 +1,40 @@
+/* Design tokens — teal accent #0B6B62 and plum neutrals from the reference app. */
+:root {
+  --fd: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --fb: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bg: #F5F1F6;
+  --surface: #FFFFFF;
+  --ink: #241A2B;
+  --mute: #5F536A;
+  --line: #DDD4E2;
+  --chip: #ECE6F0;
+  --mat: #E9E2EE;
+  --accent: #0B6B62;
+  --accent-ink: #FFFFFF;
+  --tint: #DCEFEC;
+  --danger: #B3261E;
+  --warn: #8A5A00;
+  --warn-bg: #FFF3D6;
+  --ok: #1E6B3A;
+  --shadow: 0 8px 28px rgba(36, 26, 43, .16);
+  --radius: 16px;
+  --radius-s: 10px;
+  --tap: 48px;
+  --gutter: 16px;
+  --focus: 0 0 0 3px var(--surface), 0 0 0 6px var(--accent);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141018; --surface: #1F1925; --ink: #F3EDF6; --mute: #B2A7BC; --line: #3A3141;
+    --chip: #2B2332; --mat: #0E0B12; --accent: #5CC8B8; --accent-ink: #0B1D1A; --tint: #1B3A36;
+    --danger: #FF8A80; --warn: #FFCF70; --warn-bg: #3A2E14; --ok: #7FD69B;
+    --shadow: 0 8px 28px rgba(0, 0, 0, .5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141018; --surface: #1F1925; --ink: #F3EDF6; --mute: #B2A7BC; --line: #3A3141;
+  --chip: #2B2332; --mat: #0E0B12; --accent: #5CC8B8; --accent-ink: #0B1D1A; --tint: #1B3A36;
+  --danger: #FF8A80; --warn: #FFCF70; --warn-bg: #3A2E14; --ok: #7FD69B;
+  --shadow: 0 8px 28px rgba(0, 0, 0, .5); color-scheme: dark;
+}

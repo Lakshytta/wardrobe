@@ -8,3 +8,4 @@ e2e/.coverage
 seed-src
 *.log
 .vercel
+dist-demo
