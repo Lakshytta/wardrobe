@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../lib/store.tsx';
 import type { Category, Slot } from '../lib/types.ts';
-import { Icon, Sheet, TextField, SelectField, slug } from '../components/ui.tsx';
+import { Icon, Sheet, TextField, SelectField, slug, useSubmitOnce } from '../components/ui.tsx';
 
 const SLOT_LABEL: Record<Slot, string> = { main: 'Main outfit', top: 'Blouse / top', layer: 'Dupatta / layer', accessory: 'Accessory' };
 
@@ -10,6 +10,7 @@ export default function Categories() {
   const [editing, setEditing] = useState<Category | 'new' | null>(null);
   const [name, setName] = useState('');
   const [slot, setSlot] = useState<Slot>('accessory');
+  const [saving, submit] = useSubmitOnce();
   const cats = s.categories;
   const used = (id: string) => s.data.items.filter((i) => i.category_id === id).length;
   const move = async (i: number, d: -1 | 1) => {
@@ -34,18 +35,20 @@ export default function Categories() {
       </div>
       {editing && (
         <Sheet title={editing === 'new' ? 'New category' : `Edit ${editing.name}`} onClose={() => setEditing(null)} marker="cat-sheet">
-          <form className="stack" onSubmit={async (e) => {
-            e.preventDefault(); if (!name.trim()) return;
-            if (editing === 'new') {
-              let id = slug(name) || 'category'; let n = 2;
-              while (cats.some((c) => c.id === id)) id = `${slug(name)}-${n++}`;
-              await s.saveCategory({ id, name: name.trim(), slot, sort: Math.max(0, ...cats.map((c) => c.sort)) + 1, builtin: false });
-            } else await s.saveCategory({ ...editing, name: name.trim(), slot });
-            setEditing(null);
+          <form className="stack" onSubmit={(e) => {
+            e.preventDefault(); if (!name.trim() || !editing) return;
+            void submit(async () => {
+              if (editing === 'new') {
+                let id = slug(name) || 'category'; let n = 2;
+                while (cats.some((c) => c.id === id)) id = `${slug(name)}-${n++}`;
+                await s.saveCategory({ id, name: name.trim(), slot, sort: Math.max(0, ...cats.map((c) => c.sort)) + 1, builtin: false });
+              } else await s.saveCategory({ ...editing, name: name.trim(), slot });
+              setEditing(null);
+            });
           }}>
             <TextField label="Name" value={name} onChange={setName} testid="cat-name" required />
             <SelectField label="Mix & Match slot" value={slot} onChange={(v) => setSlot(v as Slot)} testid="cat-slot" options={(Object.keys(SLOT_LABEL) as Slot[]).map((k) => ({ value: k, label: SLOT_LABEL[k] }))} />
-            <button className="btn primary" type="submit" data-testid="cat-save" disabled={!name.trim()}>Save</button>
+            <button className="btn primary" type="submit" data-testid="cat-save" disabled={!name.trim() || saving}>Save</button>
           </form>
         </Sheet>
       )}

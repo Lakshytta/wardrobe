@@ -2,10 +2,11 @@ import { useState } from 'react';
 import type { Trip } from '../lib/types.ts';
 import { useStore, today } from '../lib/store.tsx';
 import { uuid } from '../lib/data/adapter.ts';
-import { TextField, fmtDate } from './ui.tsx';
+import { TextField, fmtDate, useSubmitOnce } from './ui.tsx';
 
-export function TripForm({ initial, onDone }: { initial?: Trip; onDone: (t: Trip) => void }) {
+export function TripForm({ initial, onDone }: { initial?: Trip; onDone: (t: Trip) => unknown }) {
   const s = useStore();
+  const [saving, submit] = useSubmitOnce();
   const [name, setName] = useState(initial?.name ?? '');
   const [start, setStart] = useState(initial?.start_date ?? today());
   const [end, setEnd] = useState(initial?.end_date ?? today());
@@ -16,7 +17,8 @@ export function TripForm({ initial, onDone }: { initial?: Trip; onDone: (t: Trip
     <form className="stack" onSubmit={(e) => {
       e.preventDefault();
       if (!name.trim()) return;
-      onDone({ id: initial?.id ?? uuid(), profile_id: s.profileId, name: name.trim(), start_date: start, end_date: end < start ? start : end, event_ids: chosen.filter((id) => inRange.some((e) => e.id === id)), packing: initial?.packing ?? null });
+      const trip: Trip = { id: initial?.id ?? uuid(), profile_id: s.profileId, name: name.trim(), start_date: start, end_date: end < start ? start : end, event_ids: chosen.filter((id) => inRange.some((e) => e.id === id)), packing: initial?.packing ?? null };
+      void submit(() => onDone(trip));
     }}>
       <TextField label="Trip name" value={name} onChange={setName} testid="trip-name" required placeholder="e.g. Jaipur wedding" />
       <div className="row">
@@ -36,7 +38,7 @@ export function TripForm({ initial, onDone }: { initial?: Trip; onDone: (t: Trip
           </div>
         ) : <p className="small mute">No events in these dates — we will plan one easy outfit per day. Add events in Plan for a better list.</p>}
       </div>
-      <button className="btn primary" type="submit" data-testid="trip-save" disabled={!name.trim()}>Save trip</button>
+      <button className="btn primary" type="submit" data-testid="trip-save" disabled={!name.trim() || saving}>Save trip</button>
     </form>
   );
 }

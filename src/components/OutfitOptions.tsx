@@ -4,7 +4,7 @@ import { useWardrobe } from '../lib/store.tsx';
 import { uuid } from '../lib/data/adapter.ts';
 import { scoreLook } from '../lib/smarts/styleCheck.ts';
 import { slotOf } from '../lib/smarts/wardrobe.ts';
-import { Icon, ItemTile, Sheet, TextField, Thumb } from './ui.tsx';
+import { Icon, ItemTile, Sheet, TextField, Thumb, useSubmitOnce } from './ui.tsx';
 
 export function blankOption(): OutfitOption {
   return { id: uuid(), item_ids: [], bag_id: null, jewellery_ids: [], bag_note: '', jewellery_note: '', note: '', chosen: false };
@@ -30,7 +30,8 @@ export function optionFromItems(ids: string[], byId: Map<string, Item>): OutfitO
 
 type Tab = 'outfit' | 'bag' | 'jewellery';
 
-export function OptionEditor({ event, initial, onClose, onSave }: { event: WEvent; initial: OutfitOption; onClose: () => void; onSave: (o: OutfitOption) => void }) {
+export function OptionEditor({ event, initial, onClose, onSave }: { event: WEvent; initial: OutfitOption; onClose: () => void; onSave: (o: OutfitOption) => unknown }) {
+  const [saving, submit] = useSubmitOnce();
   const { items, categories, wardrobe } = useWardrobe();
   const [o, setO] = useState<OutfitOption>(initial);
   const [tab, setTab] = useState<Tab>('outfit');
@@ -91,7 +92,7 @@ export function OptionEditor({ event, initial, onClose, onSave }: { event: WEven
         </div>
         <div className="row end">
           <button className="btn" onClick={onClose} data-testid="option-cancel">Cancel</button>
-          <button className="btn primary" onClick={() => onSave(o)} data-testid="option-save" disabled={!o.item_ids.length && !o.bag_id && !o.jewellery_ids.length && !o.bag_note && !o.jewellery_note && !o.note}>Save option</button>
+          <button className="btn primary" onClick={() => void submit(() => onSave(o))} data-testid="option-save" disabled={saving || !o.item_ids.length && !o.bag_id && !o.jewellery_ids.length && !o.bag_note && !o.jewellery_note && !o.note}>Save option</button>
         </div>
       </div>
     </Sheet>

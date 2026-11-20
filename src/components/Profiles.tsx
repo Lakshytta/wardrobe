@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { useStore } from '../lib/store.tsx';
 import type { Profile } from '../lib/types.ts';
-import { Icon, Sheet, TextField } from './ui.tsx';
+import { Icon, Sheet, TextField, useSubmitOnce } from './ui.tsx';
 
 export const PROFILE_COLOURS = ['#0B6B62', '#7A3F9D', '#B8342E', '#1F2F5C', '#C99A1E', '#C2187A', '#1E7A4A', '#7B5237'];
 export const PROFILE_EMOJI = ['🌸', '🌼', '🪷', '🦚', '🌿', '⭐', '🌙', '💎', '👑', '🧵'];
 
-export function ProfileEditor({ initial, onDone }: { initial?: Profile; onDone: (p: Profile) => void }) {
+export function ProfileEditor({ initial, onDone }: { initial?: Profile; onDone: (p: Profile) => unknown }) {
   const { saveProfile } = useStore();
+  const [saving, submit] = useSubmitOnce();
   const [name, setName] = useState(initial?.name ?? '');
   const [color, setColor] = useState(initial?.color ?? PROFILE_COLOURS[1]);
   const [emoji, setEmoji] = useState(initial?.avatar_emoji ?? PROFILE_EMOJI[1]);
   return (
-    <form className="stack" onSubmit={async (e) => { e.preventDefault(); if (!name.trim()) return; onDone(await saveProfile({ ...initial, name: name.trim(), color, avatar_emoji: emoji })); }}>
+    <form className="stack" onSubmit={(e) => { e.preventDefault(); if (!name.trim()) return; void submit(async () => onDone(await saveProfile({ ...initial, name: name.trim(), color, avatar_emoji: emoji }))); }}>
       <TextField label="Name" value={name} onChange={setName} testid="profile-name" required placeholder="e.g. Mum" />
       <fieldset className="stack" style={{ border: 0, padding: 0, margin: 0 }}>
         <legend style={{ fontWeight: 600, marginBottom: 6 }}>Colour</legend>
@@ -32,7 +33,7 @@ export function ProfileEditor({ initial, onDone }: { initial?: Profile; onDone: 
           ))}
         </div>
       </fieldset>
-      <button className="btn primary block" type="submit" data-testid="profile-save" disabled={!name.trim()}>Save</button>
+      <button className="btn primary block" type="submit" data-testid="profile-save" disabled={!name.trim() || saving}>Save</button>
     </form>
   );
 }

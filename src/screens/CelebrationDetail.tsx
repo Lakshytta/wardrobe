@@ -3,7 +3,7 @@ import { useStore, nowIso, today } from '../lib/store.tsx';
 import { navigate } from '../lib/router.ts';
 import { uuid } from '../lib/data/adapter.ts';
 import type { Celebration, Packing, WEvent } from '../lib/types.ts';
-import { Empty, Icon, Sheet, TextField, fmtDate, daysFrom, slug } from '../components/ui.tsx';
+import { Empty, Icon, Sheet, TextField, fmtDate, daysFrom, slug, useSubmitOnce } from '../components/ui.tsx';
 import { EventForm } from '../components/EventForm.tsx';
 import { OptionThumbs, optionItemIds } from '../components/OutfitOptions.tsx';
 
@@ -18,15 +18,16 @@ export function sortSubEvents(evs: WEvent[]): WEvent[] {
   return [...evs].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || (a.date ?? '9999').localeCompare(b.date ?? '9999') || a.title.localeCompare(b.title));
 }
 
-export function CelebrationForm({ initial, onDone }: { initial?: Celebration; onDone: (c: Celebration) => void }) {
+export function CelebrationForm({ initial, onDone }: { initial?: Celebration; onDone: (c: Celebration) => unknown }) {
   const s = useStore();
+  const [saving, submit] = useSubmitOnce();
   const [name, setName] = useState(initial?.name ?? '');
   const [notes, setNotes] = useState(initial?.notes ?? '');
   return (
-    <form className="stack" onSubmit={(e) => { e.preventDefault(); if (name.trim()) onDone({ id: initial?.id ?? uuid(), profile_id: s.profileId, name: name.trim(), notes, created_at: initial?.created_at ?? nowIso() }); }}>
+    <form className="stack" onSubmit={(e) => { e.preventDefault(); if (name.trim()) void submit(() => onDone({ id: initial?.id ?? uuid(), profile_id: s.profileId, name: name.trim(), notes, created_at: initial?.created_at ?? nowIso() })); }}>
       <TextField label="Name" value={name} onChange={setName} testid="celebration-name" required placeholder="e.g. Lakshu wedding" />
       <label className="field">Notes<textarea value={notes} onChange={(e) => setNotes(e.target.value)} data-testid="celebration-notes" placeholder="e.g. Udaipur, 3 days" /></label>
-      <button className="btn primary" type="submit" data-testid="celebration-save" disabled={!name.trim()}>Save</button>
+      <button className="btn primary" type="submit" data-testid="celebration-save" disabled={!name.trim() || saving}>Save</button>
     </form>
   );
 }
