@@ -236,3 +236,19 @@ export function fmtDate(d: string | null | undefined) {
 export function daysFrom(d: string, from = new Date().toISOString().slice(0, 10)) {
   return Math.round((Date.parse(d.slice(0, 10)) - Date.parse(from)) / 86400000);
 }
+
+/**
+ * Guards a form against double submission (a double-tap on Save would otherwise
+ * create the record twice, because each submit mints a fresh id).
+ * Returns [pending, run]: run(fn) ignores calls while an earlier one is still in flight.
+ */
+export function useSubmitOnce() {
+  const busy = useRef(false);
+  const [pending, setPending] = useState(false);
+  const run = async (fn: () => unknown) => {
+    if (busy.current) return;
+    busy.current = true; setPending(true);
+    try { await fn(); } finally { busy.current = false; setPending(false); }
+  };
+  return [pending, run] as const;
+}
